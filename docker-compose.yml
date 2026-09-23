@@ -15,8 +15,8 @@ services:
     environment:
       ITGLUE_API_KEY: ${ITGLUE_API_KEY:?set this in .env}
       ITGLUE_BASE_URL: ${ITGLUE_BASE_URL:-https://api.itglue.com}
-      ITGLUE_SUBDOMAIN: ${ITGLUE_SUBDOMAIN:-weller}
-      ITGLUE_DEFAULT_ORGANIZATION_ID: ${ITGLUE_DEFAULT_ORGANIZATION_ID:-6006071}
+      ITGLUE_SUBDOMAIN: ${ITGLUE_SUBDOMAIN:-google}
+      ITGLUE_DEFAULT_ORGANIZATION_ID: ${ITGLUE_DEFAULT_ORGANIZATION_ID:-1234}
       ITGLUE_VERIFY_SSL: ${ITGLUE_VERIFY_SSL:-true}
       ITGLUE_CACHE_TTL: ${ITGLUE_CACHE_TTL:-900}
       # Require this API key on the MCP endpoints (see /health for the
