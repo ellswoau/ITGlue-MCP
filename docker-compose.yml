@@ -1,0 +1,30 @@
+# IT Glue MCP server — Docker Compose (network daemon mode).
+#
+# Composes the server as a long-running HTTP/SSE daemon so an MCP client can
+# reach it over the network. The host port is 8006 (peers occupy 8000-8005).
+
+services:
+  itglue-mcp:
+    build: .
+    image: itglue-mcp:latest
+    container_name: itglue-mcp
+    restart: unless-stopped
+    command: ["--transport", "http", "--host", "0.0.0.0", "--port", "8000"]
+    ports:
+      - "8006:8000"
+    environment:
+      ITGLUE_API_KEY: ${ITGLUE_API_KEY:?set this in .env}
+      ITGLUE_BASE_URL: ${ITGLUE_BASE_URL:-https://api.itglue.com}
+      ITGLUE_SUBDOMAIN: ${ITGLUE_SUBDOMAIN:-weller}
+      ITGLUE_DEFAULT_ORGANIZATION_ID: ${ITGLUE_DEFAULT_ORGANIZATION_ID:-6006071}
+      ITGLUE_VERIFY_SSL: ${ITGLUE_VERIFY_SSL:-true}
+      ITGLUE_CACHE_TTL: ${ITGLUE_CACHE_TTL:-900}
+      # Require this API key on the MCP endpoints (see /health for the
+      # credential-free health check). Generate with: `openssl rand -hex 32`.
+      ITGLUE_MCP_AUTH_TOKEN: ${ITGLUE_MCP_AUTH_TOKEN:?set this in .env}
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=6).close()"]
+      interval: 30s
+      timeout: 6s
+      retries: 3
+      start_period: 20s
